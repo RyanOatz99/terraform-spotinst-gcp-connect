@@ -20,7 +20,7 @@ def cli(ctx, *args, **kwargs):
 @click.argument('name',)
 @click.pass_context
 def create(ctx, *args, **kwargs):
-    '''Create a new Spot Account'''
+    """Create a new Spot Account"""
     result = ctx.obj['client'].create_account(kwargs.get('name'))
     click.echo(json.dumps(result))
 
@@ -29,7 +29,7 @@ def create(ctx, *args, **kwargs):
 @click.argument('account-id')
 @click.pass_context
 def delete(ctx, *args, **kwargs):
-    '''Delete a Spot Account'''
+    """Delete a Spot Account"""
     ctx.obj['client'].delete_account(kwargs.get('account_id'))
 
 
@@ -37,7 +37,7 @@ def delete(ctx, *args, **kwargs):
 @click.argument('accountid')
 @click.argument('credential')
 def set_cloud_credentials(accountid, credential):
-    '''Set serviceaccount to a Spot Account'''
+    """Set serviceaccount to a Spot Account"""
     print(accountid)
     temp = json.loads(base64.b64decode(credential))
 
@@ -64,7 +64,7 @@ def set_cloud_credentials(accountid, credential):
 )
 @click.pass_context
 def get(ctx, *args, **kwargs):
-    '''Returns ONLY the first match'''
+    """Returns ONLY the first match"""
     ctx.obj['client'].account_id = kwargs.get('account_id')
     result = ctx.obj['client'].get_accounts()
     if kwargs.get('filter'):

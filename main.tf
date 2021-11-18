@@ -1,26 +1,3 @@
-terraform {
-    required_version = ">=0.13.0"
-    required_providers {
-        google = {}
-    }
-}
-
-## Provider
-provider "google" {
-    project = var.project
-}
-
-## Local
-locals {
-    cmd = "${path.module}/scripts/spot-account"
-    account_id = data.external.account.result["account_id"]
-}
-
-# Create a random string
-resource "random_id" "role" {
-    byte_length = 8
-}
-
 ## Resources
 resource "google_project_iam_custom_role" "SpotRole" {
   role_id     = "SpotRole${random_id.role.hex}"
@@ -34,10 +11,10 @@ resource "google_service_account" "spotserviceaccount" {
 	    # Without this set-cloud-credentials fails 
 	    command = "sleep 10"
 	}
-	account_id   = "spot-${random_id.role.hex}"
-	display_name = "spot-${random_id.role.hex}"
-	description = "Service Account for Spot.io"
-	project = var.project
+	account_id      = "spot-${random_id.role.hex}"
+	display_name    = "spot-${random_id.role.hex}"
+	description     = "Service Account for Spot.io"
+	project         = var.project
 }
 
 resource "google_service_account_key" "key" {
@@ -46,7 +23,7 @@ resource "google_service_account_key" "key" {
 
 resource "google_project_iam_binding" "spot-account-iam" {
     project = var.project
-    role = google_project_iam_custom_role.SpotRole.name
+    role    = google_project_iam_custom_role.SpotRole.name
     members = [
         "serviceAccount:spot-${random_id.role.hex}@${var.project}.iam.gserviceaccount.com",
     ]
@@ -55,12 +32,12 @@ resource "google_project_iam_binding" "spot-account-iam" {
 # Call Spot API to create the Spot Account 
 resource "null_resource" "account" {
     triggers = {
-        cmd = "${path.module}/scripts/spot-account"
-        name = var.project
+        cmd     = "${path.module}/scripts/spot-account"
+        name    = var.project
     }
     provisioner "local-exec" {
         interpreter = ["/bin/bash", "-c"]
-        command = "${self.triggers.cmd} create ${self.triggers.name}"
+        command     = "${self.triggers.cmd} create ${self.triggers.name}"
     }
     provisioner "local-exec" {
         when = destroy
@@ -72,15 +49,6 @@ resource "null_resource" "account" {
     }
 }
 
-# Retrieve the Spot Account ID Information
-data "external" "account" {
-    depends_on = [null_resource.account]
-    program = [
-        local.cmd,
-        "get",
-        "--filter=name=${var.project}"
-    ]
-}
 
 # Link the service account to the Spot Account
 resource "null_resource" "account_association" {

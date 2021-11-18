@@ -7,19 +7,11 @@ Example Terraform for Spot.io
 ```hcl
 #Call the spot module to create a Spot account and link project to the platform
 module "gcp_connect_project1" {
-    source = "stevenfeltner/gcp-connect/spotinst"
+    source  = "stevenfeltner/gcp-connect/spotinst"
     project = "project1"
-}
-#Connect a second project
-module "gcp_connect_project2" {
-  source = "stevenfeltner/gcp-connect/spotinst"
-  project = "project2"
 }
 output "spot_account_id" {
     value = module.gcp_connect_project1.spot_account_id
-}
-output "spot_account_id2" {
-  value = module.gcp_connect_project2.spot_account_id
 }
 
 ```
@@ -43,4 +35,4 @@ On Apply:
 * Provide GCP Service Account Key to newly created Spot Account
 
 On Destroy:
-Remove all above resources including deleting the Spot Account
+* Remove all above resources including deleting the Spot Account
