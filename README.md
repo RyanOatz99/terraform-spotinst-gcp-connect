@@ -1,9 +1,13 @@
 # Terraform GCP Examples for Spot.io
 
 ## Introduction
-Example Terraform for Spot.io
+The module will aid in automatically connecting your GCP project to Spot via terraform. This will also leverage a python script to create the Spot account within your Spot Organization and attach the GCP service account credential.
 
-## Example
+### Pre-Reqs
+* Spot Organization Admin API token. This is required to be added as an environment variable stored in ```SPOTINST_TOKEN```.  
+* Python 3 installed. 
+
+## Usage
 ```hcl
 #Call the spot module to create a Spot account and link project to the platform
 module "gcp_connect_project1" {
@@ -15,13 +19,6 @@ output "spot_account_id" {
 }
 
 ```
-
-## Details
-The module will aid in automatically connecting your GCP project to Spot via terraform. This will also leverage a python script to create the Spot account within your Spot Organization and attach the GCP service account credential.
-
-### Pre-Reqs
-* Spot Organization Admin API token. This is required to be added as an environment variable stored in ```SPOTINST_TOKEN```.  
-* Python 3 installed. 
 
 ### Run
 This terraform module will do the following:
